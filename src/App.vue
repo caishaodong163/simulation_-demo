@@ -2,7 +2,7 @@
   <div id="app">
     <Header/>
     <div class="main-section">
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -32,6 +32,16 @@ export default {
   padding: 0;
 }
 </style>
+<!-- scss是sass的扩展语法(兼容 CSS3),更方便,更快捷 (说白了都是一样) -->
+
+<style lang="scss" scoped>
+.main-section{
+  margin:auto;
+  margin-top:40px;
+  width:1200px;
+}
+</style>
+
 
 
 

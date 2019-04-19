@@ -27,28 +27,27 @@ function loadView(view) {
 // ]
 
 let arr = [{
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/topic/:id',
-    name: 'topic',
-    component: Topic
-  },
-  {
-    path: '/user/:id',
-    name: 'user',
-    component: User
-  },
-  {
-    path: '/topic',
-    redirect: '/'
-  },
-  {
-    path: '/user',
-    redirect: '/'
-  }
-]
+  path: '/',
+  name: 'home',
+  component: Home
+},
+{
+  path: '/topic/:id',
+  name: 'topic',
+  component: Topic
+},
+{
+  path: '/user/:id',
+  name: 'user',
+  component: User
+},
+{
+  path: '/topic',
+  redirect: '/'
+},
+{
+  path: '/user',
+  redirect: '/'
+}]
 
 export default arr

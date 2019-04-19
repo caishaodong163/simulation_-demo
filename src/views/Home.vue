@@ -3,19 +3,19 @@
     <!-- v-model绑定的代表第一个显示什么（根据name来决定的） -->
     <el-tabs v-model="tab" @tab-click="tabChanged">
       <el-tab-pane label="全部" name="all">
-        <Content :list='list' />
+        <Content :list="list"/>
       </el-tab-pane>
       <el-tab-pane label="精华" name="good">
-        <Content :list='list' />
+        <Content :list="list"/>
       </el-tab-pane>
       <el-tab-pane label="分享" name="share">
-        <Content :list='list' />
+        <Content :list="list"/>
       </el-tab-pane>
       <el-tab-pane label="问答" name="ask">
-        <Content :list='list' />
+        <Content :list="list"/>
       </el-tab-pane>
       <el-tab-pane label="招聘" name="job">
-        <Content :list='list' />
+        <Content :list="list"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -52,6 +52,10 @@ export default {
     /* 第一个getTopics 是方法，第二个是引入解构出来 */
     /* 第二个getTopics 里面的数据是API文件内data (后端需要的参数)*/
     getTopics() {
+      console.log(this.page,'this.page')
+      console.log(this.limit,'this.limit')
+      console.log(this.tab,'this.tab')
+
       getTopics({
         page: this.page,
         limit: this.limit,
@@ -68,7 +72,7 @@ export default {
       });
     },
     /**
-     * 当前Tab变化时判断Store里是否已经存储数据。
+     * 当前Tab变化时判断Store里是否已经存储数据。(点击切换的时候触发)
      * 是：拉出来，设置到state中
      * 否：重新获取数据
      */
@@ -84,12 +88,35 @@ export default {
 
       this.list = store[this.tab].data;
       this.limit = store[this.tab].limit; /* 页面暂存的数据还是给了返回出去的数据 */
+    },
+    /*
+     * 滚动函数,判断当前滚动条是否到了底部来决定是否重新拉取数据
+     */
+    scrollMethod() {
+
+      const sumH = document.body.scrollHeight || document.documentElement.scrollHeight;//(所有内容高度,不变)
+      const viewH = document.documentElement.clientHeight;//浏览器可视区的高度(随浏览器的大小变)
+      
+      const scrollH = document.documentElement.scrollTop || document.body.scrollTop;//(记录鼠标往下滚动的)
+
+      var viewA = viewH + scrollH
+      // 如果不四舍五入的话,滚3次就会失效
+      if(viewA.toFixed(0)*1 >= sumH){
+        // 如果浏览器的可视区的高度 (随浏览器的大小变) +  (记录鼠标往下滚动的) 大于或等于当前的页面内容的高度的时候  触发
+        // 注意如果X轴的横向滚动条出现的时候会影响比较
+         this.getTopics();
+      }
     }
   },
-  /* 页面初始的时候调取接口 */
+  /* 页面初始的时候调取接口 ( 一般都是在这个钩子下面调用接口获取数据) */
   created() {
     this.getTopics();
+    window.addEventListener("scroll", this.scrollMethod);
   },
+  destroyed() {
+    window.removeEventListener("scroll", this.scrollMethod);
+  },
+  /* 组件被销毁的时候,移除滚动事件 */
   components: {
     Content
   }
@@ -102,6 +129,6 @@ export default {
   width: 75%;
   padding: 20px 30px;
   box-sizing: border-box;
-  box-shadow: 0 2px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
